@@ -1,0 +1,254 @@
+# [PackageDev] target_format: plist, ext: tmLanguage
+---
+name: Rust
+scopeName: source.rust
+fileTypes: [rs]
+uuid: ebcf1365-829d-4af2-aa0e-df7e588b08a3
+
+patterns:
+- include: '#comments'
+
+- name: keyword.other.rust
+  begin: \#\!?\[
+  end: \]
+  patterns:
+  - include: '#strings'
+  # - include: '#numbers'
+
+- name: meta.module.rust
+  match: \b(mod)\s+(\w+)
+  captures:
+    '1': {name: storage.type.module.rust}
+    '2': {name: entity.name.function.rust}
+
+- name: meta.function.rust
+  begin: \b(fn)\s+(\w+)
+  end: ;|\{
+  captures:
+    '1': {name: storage.type.function.rust}
+    '2': {name: entity.name.function.rust}
+  patterns:
+  - include: '#comments'
+  - include: '#parameters'
+
+- name: storage.type.function.rust
+  match: \bproc\b
+
+- name: meta.closure.rust
+  begin: \|(?!.*?//)(?=.*\|)
+  end: \|
+  patterns:
+  - include: '#parameters'
+
+- name: meta.struct.rust
+  begin: \b(struct)
+  end: ;|\(|(?<=\})
+  captures:
+    '1': {name: storage.type.struct.rust}
+  patterns:
+  - name: meta.struct.block.rust
+    begin: \{
+    end: \}
+    patterns:
+    - include: '#comments'
+    - include: '#parameters'
+  - name: entity.name.class.rust
+    match: \w+
+  - include: '#type_parameter'
+
+- name: meta.let.rust
+  begin: \b(let)\s+(?=\S)
+  end: ;|\=
+  captures:
+    '1': {name: storage.type.let.rust}
+  patterns:
+  - include: '#comments'
+  - include: '#parameters'
+
+- name: meta.static.rust
+  match: \b(static)\s+(?:(mut)\s+)?(\w+)
+  captures:
+    '1': {name: storage.type.static.rust}
+    '2': {name: keyword.operator.rust}
+    '3': {name: entity.name.class.rust}
+
+- name: meta.type.rust
+  begin: \b(type)\s+(\w+)
+  end: \=
+  captures:
+    '1': {name: storage.type.type.rust}
+    '2': {name: entity.name.class.rust}
+  patterns:
+  - include: '#comments'
+  - include: '#type_parameter'
+
+- name: meta.enum.rust
+  begin: \b(enum)\s+(\w+)
+  end: ;|\{
+  captures:
+    '1': {name: storage.type.enum.rust}
+    '2': {name: entity.name.class.rust}
+  patterns:
+  - include: '#comments'
+  - include: '#type_parameter'
+
+- name: meta.trait.rust
+  begin: \b(trait)\s+(\w+)
+  end: ;|\{
+  captures:
+    '1': {name: storage.type.trait.rust}
+    '2': {name: entity.name.class.rust}
+  patterns:
+  - include: '#comments'
+  - include: '#types'
+
+- name: meta.impl.rust
+  begin: \b(impl)
+  end: ;|\{
+  captures:
+    '1': {name: storage.type.impl.rust}
+  patterns:
+  - include: '#comments'
+  - include: '#type_parameter'
+  - name: storage.type.impl.rust
+    match: for
+  - name: entity.name.class.rust
+    match: \w+
+
+- name: meta.for.rust
+  begin: \b(for)
+  end: \{
+  captures:
+    '1': {name: keyword.control.rust}
+  patterns:
+  - include: '#comments'
+  - name: keyword.control.rust
+    match: \bin\b
+
+- name: keyword.other.rust
+  match: \b(?:crate|use)\b
+
+- name: keyword.other.rust
+  match: \b=>\b
+
+- name: constant.language.rust
+  match: \b(?:false|true)\b
+
+- name: variable.language.rust
+  match: \b(?:self|super)\b|(?<=^|\W)_(?=\W|$)
+
+- name: keyword.control.rust
+  match: \b(?:break|continue|if|else|loop|match|return|while)\b|=>
+
+- name: storage.modifier.rust
+  match: \b(?:extern|priv|pub|unsafe)\b
+
+- include: '#types'
+- include: '#numbers'
+- include: '#strings'
+
+- name: support.function.rust
+  match: \w+\!
+
+repository:
+  string_escaped_char:
+    patterns:
+    - name: constant.character.escape.rust
+      match: \\(?:[\\\"'nrt0]|U\h{8}|u\h{4}|x\h{2})
+    - name: invalid.illegal.unknown-escape.rust
+      match: \\ |\\.[^"'\s]*
+  strings:
+    patterns:
+    - name: string.other.rust
+      begin: r(\#*)\"
+      beginCaptures:
+        '0': {name: punctuation.definition.string.begin.rust}
+      end: \"\1
+      endCaptures:
+        '0': {name: punctuation.definition.string.end.rust}
+    - name: string.quoted.double.rust
+      begin: \"
+      beginCaptures:
+        '0': {name: punctuation.definition.string.begin.rust}
+      end: \"
+      endCaptures:
+        '0': {name: punctuation.definition.string.end.rust}
+      patterns:
+      - include: '#string_escaped_char'
+    - name: string.quoted.double.rust
+      begin: \'
+      beginCaptures:
+        '0': {name: punctuation.definition.string.begin.rust}
+      end: \'
+      endCaptures:
+        '0': {name: punctuation.definition.string.end.rust}
+      patterns:
+      - include: '#string_escaped_char'
+      - name: invalid.illegal.character.rust
+        match: (?:(?<=')(?:[^'\n]{2,})|^[^'\n]+)
+
+  numbers:
+    patterns:
+    - name: meta.numeric.rust
+      match: \.\.(\d+)
+      captures:
+        '1': {name: constant.numeric.rust}
+    - name: meta.numeric.rust
+      match: (?<!\.)\b(0(?:b[01_]+|o[0-7_]+|x[\h_]+)|\d[\d_]*)((?:u|i)(?:8|16|32|64))?\b(?!\.)
+      captures:
+        '1': {name: constant.numeric.rust}
+        '2': {name: storage.type.rust}
+    - name: meta.numeric.rust
+      match: (?<!\.)\b(\d[\d_]*(?:\.[\d_]+)?(?:[eE][\+\-]?[\d\_]+)?)(f(?:32|64))?\b(?!\.)
+      captures:
+        '1': {name: constant.numeric.rust}
+        '2': {name: storage.type.rust}
+    - name: invalid.illegal.numeric.rust
+      match: \.?\b_?\d\S*\b[\.\+\-]?
+
+  comments:
+    patterns:
+    - name: comment.block.documentation.rust
+      begin: /\*\*
+      captures:
+        '0': {name: punctuation.definition.comment.rust}
+      end: \*\*/
+    - name: comment.block.rust
+      begin: /\*
+      captures:
+        '0': {name: punctuation.definition.comment.rust}
+      end: \*/
+    - name: comment.line.double-slash.documentation.rust
+      match: (///).*$
+      captures:
+        '1': {name: punctuation.definition.comment.rust}
+    - name: comment.line.double-slash.rust
+      match: (//).*$
+      captures:
+        '1': {name: punctuation.definition.comment.rust}
+
+  type_parameter:
+    patterns:
+    - name: meta.type.generic.rust
+      begin: (?<!\<)\<(?!\<)
+      end: \>
+      patterns:
+      - match: \w+
+        name: support.type.rust
+
+  types:
+    patterns:
+    - name: storage.type.rust
+      match: \'\w+(?!\')\b
+    - name: storage.type.rust
+      match: (?:\b[A-Z]\w*|(?<=^|\W)\!(?=\W|$)|\b(?:bool|int|uint|u8|u16|u32|u64|i8|i16|i32|i64|f32|f64|char|str)\b)
+    - name: keyword.operator.rust
+      match: \b(?:as|box|mut|ref)\b|&(?=[\w'])
+    - include: '#type_parameter'
+
+  parameters:
+    patterns:
+    - include: '#types'
+    - name: variable.parameter.rust
+      match: \w+
+...
