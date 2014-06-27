@@ -29,6 +29,8 @@ patterns:
     '2': {name: entity.name.function.rust}
   patterns:
   - include: '#comments'
+  - name: keyword.other.rust
+    match: ->
   - include: '#parameters'
 
 - name: storage.type.function.rust
@@ -128,9 +130,6 @@ patterns:
 - name: keyword.other.rust
   match: \b(?:crate|use)\b
 
-- name: keyword.other.rust
-  match: \b=>\b
-
 - name: constant.language.rust
   match: \b(?:false|true)\b
 
@@ -142,6 +141,9 @@ patterns:
 
 - name: storage.modifier.rust
   match: \b(?:extern|priv|pub|unsafe)\b
+
+- name: support.constant.rust
+  match: \b_*[A-Z][A-Z_\d]*\b
 
 - include: '#types'
 - include: '#numbers'
@@ -190,7 +192,7 @@ repository:
   numbers:
     patterns:
     - name: meta.range.rust
-      match: (\d+)?\.\.(\d+)
+      match: (\d*)\.\.(\d+)
       captures:
         '1': {name: constant.numeric.rust}
         '2': {name: constant.numeric.rust}
@@ -231,7 +233,7 @@ repository:
   type_parameter:
     patterns:
     - name: meta.type.generic.rust
-      begin: (?<!\<)\<(?!\<)
+      begin: \<(?![^\>]*(?:&&|&\s|\|))(?=.*\>)
       end: \>
       patterns:
       - match: \w+

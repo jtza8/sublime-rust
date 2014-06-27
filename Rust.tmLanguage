@@ -75,6 +75,12 @@
 					<string>#comments</string>
 				</dict>
 				<dict>
+					<key>match</key>
+					<string>-&gt;</string>
+					<key>name</key>
+					<string>keyword.other.rust</string>
+				</dict>
+				<dict>
 					<key>include</key>
 					<string>#parameters</string>
 				</dict>
@@ -372,12 +378,6 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\b=&gt;\b</string>
-			<key>name</key>
-			<string>keyword.other.rust</string>
-		</dict>
-		<dict>
-			<key>match</key>
 			<string>\b(?:false|true)\b</string>
 			<key>name</key>
 			<string>constant.language.rust</string>
@@ -399,6 +399,12 @@
 			<string>\b(?:extern|priv|pub|unsafe)\b</string>
 			<key>name</key>
 			<string>storage.modifier.rust</string>
+		</dict>
+		<dict>
+			<key>match</key>
+			<string>\b_*[A-Z][A-Z_\d]*\b</string>
+			<key>name</key>
+			<string>support.constant.rust</string>
 		</dict>
 		<dict>
 			<key>include</key>
@@ -506,7 +512,7 @@
 						</dict>
 					</dict>
 					<key>match</key>
-					<string>(\d+)?\.\.(\d+)</string>
+					<string>(\d*)\.\.(\d+)</string>
 					<key>name</key>
 					<string>meta.range.rust</string>
 				</dict>
@@ -694,7 +700,7 @@
 			<array>
 				<dict>
 					<key>begin</key>
-					<string>(?&lt;!\&lt;)\&lt;(?!\&lt;)</string>
+					<string>\&lt;(?![^\&gt;]*(?:&amp;&amp;|&amp;\s|\|))(?=.*\&gt;)</string>
 					<key>end</key>
 					<string>\&gt;</string>
 					<key>name</key>
