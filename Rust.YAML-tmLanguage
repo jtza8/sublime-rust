@@ -189,10 +189,11 @@ repository:
 
   numbers:
     patterns:
-    - name: meta.numeric.rust
-      match: \.\.(\d+)
+    - name: meta.range.rust
+      match: (\d+)?\.\.(\d+)
       captures:
         '1': {name: constant.numeric.rust}
+        '2': {name: constant.numeric.rust}
     - name: meta.numeric.rust
       match: (?<!\.)\b(0(?:b[01_]+|o[0-7_]+|x[\h_]+)|\d[\d_]*)((?:u|i)(?:8|16|32|64))?\b(?!\.)
       captures:

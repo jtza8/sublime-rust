@@ -499,11 +499,16 @@
 							<key>name</key>
 							<string>constant.numeric.rust</string>
 						</dict>
+						<key>2</key>
+						<dict>
+							<key>name</key>
+							<string>constant.numeric.rust</string>
+						</dict>
 					</dict>
 					<key>match</key>
-					<string>\.\.(\d+)</string>
+					<string>(\d+)?\.\.(\d+)</string>
 					<key>name</key>
-					<string>meta.numeric.rust</string>
+					<string>meta.range.rust</string>
 				</dict>
 				<dict>
 					<key>captures</key>
